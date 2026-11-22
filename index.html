@@ -333,6 +333,27 @@
       .city-today p { color: #c4ddcf; font-size: .95rem; }
       @media (max-width: 860px) { .chrome-strip, .city-grid { grid-template-columns: 1fr; } }
 
+      /* ---------- Weather Tower ---------- */
+      .weather-panel { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); padding: 24px; }
+      .weather-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+      .weather-controls .field { flex: 1 1 220px; }
+      .weather-controls select { font: inherit; color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 13px; min-height: 48px; width: 100%; }
+      .weather-controls select:focus { border-color: var(--green); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 22%, transparent); }
+      .weather-status { color: var(--muted); font-size: .95rem; padding: 14px 0 4px; }
+      .weather-error { border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); border-radius: 12px; padding: 16px 18px; font-size: .95rem; }
+      .weather-error b { color: var(--danger); display: block; margin-bottom: 3px; }
+      .weather-main { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+      .weather-temp { font-family: "Sora", sans-serif; font-size: 3.4rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+      .weather-temp small { font-size: 1.5rem; font-weight: 700; color: var(--muted); }
+      .weather-cond { font-family: "Sora", sans-serif; font-size: 1.25rem; font-weight: 700; }
+      .weather-city { color: var(--muted); font-size: .95rem; margin-top: 2px; }
+      .weather-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+      .weather-stat { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+      .weather-stat span { display: block; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--gold-ink); }
+      .weather-stat b { font-family: "Sora", sans-serif; font-size: 1.2rem; display: block; margin-top: 4px; }
+      .weather-meta { margin-top: 18px; color: var(--muted); font-size: .88rem; display: flex; gap: 8px 18px; flex-wrap: wrap; }
+      @media (max-width: 640px) { .weather-stats { grid-template-columns: 1fr; } .weather-temp { font-size: 2.7rem; } }
+
       /* ---------- FAQ ---------- */
       .faq-list { max-width: 780px; display: grid; gap: 12px; }
       details.faq { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 20px; }
@@ -697,6 +718,7 @@
         <div class="nav-links" id="navLinks">
           <a href="#help">Start</a>
           <a href="#city">City</a>
+          <a href="#weather">Weather</a>
           <a href="#daily">Daily</a>
           <a href="#tools">Tools</a>
           <a href="#bazaar">Bazaar</a>
@@ -768,10 +790,60 @@
           <a class="city-card" href="#guides"><span class="c-tag">School</span><h3>Success Guides</h3><p>Three short, honest guides: your first $100 online, ranking a new website on Google in 30 days, and the 7-day content system.</p></a>
           <a class="city-card" href="#roadmap"><span class="c-tag">Main Road</span><h3>30-Day Launch Roadmap</h3><p>From launch day to first income in four weeks — Launch, Content &amp; SEO, Monetize, Grow — the same road Success Hub itself follows.</p></a>
           <a class="city-card" href="#owner"><span class="c-tag">Owner's Office</span><h3>Owner, Security &amp; Earnings</h3><p>Ownership, hacking protection and earnings, all tied to the owner's Google account — umairsaqib211@gmail.com — explained in plain words.</p></a>
+          <a class="city-card" href="#weather"><span class="c-tag">Tower</span><h3>Weather Tower — Mausam Tower</h3><p>Real live weather for Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad and Multan — temperature, sky condition, wind and humidity, fetched fresh every time you open it.</p></a>
         </div>
         <div class="city-today">
           <b>Today in the City — <span id="cityDate">Today</span></b>
           <p>Today's mission, shopping tip and Rank Power task are already open in their sections above and below. The next set unlocks tonight at 12:01 AM, whether you were online or not.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="weather">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-label">Success City — Weather Tower</span>
+          <h2>Weather Tower (Mausam Tower) — live weather, right now</h2>
+          <p>The newest part of Success City. Pick your city and the tower fetches the real, live weather at that moment — temperature, sky condition, wind speed and humidity — from the free Open-Meteo weather service. Karachi is shown first; the reading updates every time you change the city or tap Refresh.</p>
+        </div>
+        <div class="weather-panel">
+          <div class="weather-controls">
+            <div class="field">
+              <label for="weatherCity">Choose your city</label>
+              <select id="weatherCity">
+                <option value="karachi" selected>Karachi</option>
+                <option value="lahore">Lahore</option>
+                <option value="islamabad">Islamabad</option>
+                <option value="rawalpindi">Rawalpindi</option>
+                <option value="faisalabad">Faisalabad</option>
+                <option value="multan">Multan</option>
+              </select>
+            </div>
+            <button class="btn btn-green" id="weatherRefresh" type="button">Refresh weather</button>
+          </div>
+          <div class="weather-status" id="weatherStatus" role="status">Loading live weather…</div>
+          <div class="weather-error" id="weatherError" hidden>
+            <b>Live weather could not be loaded.</b>
+            <span>The weather service did not answer — you may be offline, or the service is busy right now. No old or made-up numbers are shown here. Check your internet connection and tap Refresh weather to try again.</span>
+          </div>
+          <div id="weatherBody" hidden>
+            <div class="weather-main">
+              <div class="weather-temp"><span id="weatherTemp">--</span><small>°C</small></div>
+              <div>
+                <div class="weather-cond" id="weatherCond">—</div>
+                <div class="weather-city" id="weatherCityName">—</div>
+              </div>
+            </div>
+            <div class="weather-stats">
+              <div class="weather-stat"><span>Temperature</span><b id="weatherTempStat">—</b></div>
+              <div class="weather-stat"><span>Wind speed</span><b id="weatherWind">—</b></div>
+              <div class="weather-stat"><span>Humidity</span><b id="weatherHumidity">—</b></div>
+            </div>
+            <div class="weather-meta">
+              <span>Weather fetched at: <b id="weatherTime">—</b></span>
+              <span>Live data: Open-Meteo weather service</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -864,11 +936,12 @@
           <p>The daily mission, tip, shopping tip and Rank Power task change automatically every day at 12:01 AM. New tools and guides are added in updates — the most recent ones are listed here so you can find them fast.</p>
         </div>
         <div class="drop-banner">
-          <span class="drop-date">Latest addition — tonight's new guide</span>
-          <h3>Winter Shopping Guide — jackets, sweaters &amp; shawls, fully compared</h3>
-          <p>The Shopping Guide now has a full <a href="#winter-guide">Winter Shopping Guide</a>: the winter brands ranked for warmth, quality and value with honest PKR price ranges, 6 smart checks before you pay (fabric, stitching, warmth, wash care, and buying early before prices rise), and a short winter FAQ. The next planned guide is the <b>Grocery Savings Plan</b>.</p>
+          <span class="drop-date">Latest addition — new tonight</span>
+          <h3>Weather Tower — a new district in Success City</h3>
+          <p>Success City has a new tower tonight: the <a href="#weather">Weather Tower (Mausam Tower)</a> shows real live weather — temperature, sky condition, wind speed and humidity — for Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad and Multan, fetched fresh from the Open-Meteo weather service every time you open it. The next planned guide is the <b>Grocery Savings Plan</b>.</p>
         </div>
         <div class="daily-drops" style="margin-top:0;">
+          <article class="drop-card"><span>New City District</span><b>Weather Tower (Mausam Tower)</b><p>New tonight in Success City: real live weather for 6 Pakistani cities — pick your city and see the temperature, sky condition, wind and humidity right now. <a href="#weather">Check the weather</a></p></article>
           <article class="drop-card"><span>Market</span><b>Buy &amp; Sell Bazaar</b><p>Post an item with one photo, separate call and WhatsApp numbers (shown to everyone, or only to a buyer who shares their own number), your location, and comments on every ad — plus a 1% bonus from the seller to the buyer on every deal. <a href="#bazaar">Open the Bazaar</a></p></article>
           <article class="drop-card"><span>Collection + Tool #16</span><b>Islamic Collection &amp; Success AI Helper</b><p>An <a href="#islamic">Islamic Collection</a> of ranked debater, seerat and Quran videos, and a new tool: the <a href="#tools" data-tool-link="aihelper">Success AI Helper</a>, a chat box that answers questions about this site instantly.</p></article>
           <article class="drop-card"><span>Tool #15</span><b>WhatsApp Business Message Maker</b><p>Ready-to-send WhatsApp messages for your shop or page — sale offers, welcomes, order updates and follow-ups, in English or Roman Urdu. <a href="#tools" data-tool-link="whatsapp">Try it now</a></p></article>
@@ -1923,6 +1996,7 @@
             <h3>Explore</h3>
             <ul class="foot-links">
               <li><a href="#city">Success City — Full Map</a></li>
+              <li><a href="#weather">Weather Tower — Live Weather</a></li>
               <li><a href="#help">Start Here — Easy Guide</a></li>
               <li><a href="#daily">Daily Success Mission</a></li>
               <li><a href="#update">What's New</a></li>
@@ -3068,8 +3142,73 @@
       });
       renderListings();
 
+      /* ================= Weather Tower (live weather via Open-Meteo) ================= */
+      const WEATHER_CITIES = {
+        karachi:    { name: "Karachi",    lat: 24.8608, lon: 67.0011 },
+        lahore:     { name: "Lahore",     lat: 31.5204, lon: 74.3587 },
+        islamabad:  { name: "Islamabad",  lat: 33.6844, lon: 73.0479 },
+        rawalpindi: { name: "Rawalpindi", lat: 33.5651, lon: 73.0169 },
+        faisalabad: { name: "Faisalabad", lat: 31.4504, lon: 73.1350 },
+        multan:     { name: "Multan",     lat: 30.1575, lon: 71.5249 }
+      };
+      const WEATHER_CODES = {
+        0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Cloudy",
+        45: "Foggy", 48: "Foggy",
+        51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+        56: "Freezing drizzle", 57: "Freezing drizzle",
+        61: "Light rain", 63: "Rain", 65: "Heavy rain",
+        66: "Freezing rain", 67: "Freezing rain",
+        71: "Light snow", 73: "Snow", 75: "Heavy snow", 77: "Snow grains",
+        80: "Light rain showers", 81: "Rain showers", 82: "Heavy rain showers",
+        85: "Snow showers", 86: "Snow showers",
+        95: "Thunderstorm", 96: "Thunderstorm with hail", 99: "Thunderstorm with hail"
+      };
+      function loadWeather() {
+        const sel = $("#weatherCity");
+        const status = $("#weatherStatus");
+        const errBox = $("#weatherError");
+        const body = $("#weatherBody");
+        if (!sel || !status || !errBox || !body) return;
+        const city = WEATHER_CITIES[sel.value] || WEATHER_CITIES.karachi;
+        status.hidden = false;
+        status.textContent = "Loading live weather for " + city.name + "…";
+        errBox.hidden = true;
+        body.hidden = true;
+        const url = "https://api.open-meteo.com/v1/forecast?latitude=" + city.lat +
+          "&longitude=" + city.lon +
+          "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m" +
+          "&timezone=Asia%2FKarachi";
+        fetch(url, { cache: "no-store" })
+          .then(res => { if (!res.ok) throw new Error("Weather service error"); return res.json(); })
+          .then(data => {
+            const cur = data && data.current;
+            if (!cur || typeof cur.temperature_2m !== "number") throw new Error("No weather data");
+            const fetchedAt = new Date();
+            $("#weatherTemp").textContent = Math.round(cur.temperature_2m);
+            $("#weatherTempStat").textContent = Math.round(cur.temperature_2m) + " °C";
+            $("#weatherCond").textContent = WEATHER_CODES[cur.weather_code] || "Weather right now";
+            $("#weatherCityName").textContent = city.name + ", Pakistan";
+            $("#weatherWind").textContent = (typeof cur.wind_speed_10m === "number" ? Math.round(cur.wind_speed_10m) : "—") + " km/h";
+            $("#weatherHumidity").textContent = (typeof cur.relative_humidity_2m === "number" ? Math.round(cur.relative_humidity_2m) : "—") + " %";
+            $("#weatherTime").textContent = fetchedAt.toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true });
+            status.hidden = true;
+            errBox.hidden = true;
+            body.hidden = false;
+          })
+          .catch(() => {
+            status.hidden = true;
+            body.hidden = true;
+            errBox.hidden = false;
+          });
+      }
+      const weatherCitySel = $("#weatherCity");
+      if (weatherCitySel) weatherCitySel.addEventListener("change", loadWeather);
+      const weatherRefreshBtn = $("#weatherRefresh");
+      if (weatherRefreshBtn) weatherRefreshBtn.addEventListener("click", loadWeather);
+
       /* ================= Init ================= */
       renderDaily();
+      loadWeather();
       renderShopTip();
       renderPowerTask();
       tickCountdown();
